@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  php:
+    image: ghcr.io/clacroix/capomondo-reports-fpm:latest
+    container_name: php-fpm
+    restart: always
+    volumes:
+      - php_socket:/var/run/php
+      - /home/clacroix/capomondo-v3/files:/srv/app/files
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    env_file:
+      - .env.php.local
+    networks:
+      - capomondo
+
+  caddy:
+    image: ghcr.io/clacroix/capomondo-caddy:latest
+    depends_on:
+      - php
+    env_file:
+      - .env.caddy.local
+    restart: always
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      # HTTP
+      - target: 80
+        published: 80
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: 443
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: 443
+        protocol: udp
+    networks:
+      - capomondo
+
+  elasticsearch:
+    image: elasticsearch:8.6.1
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - /home/clacroix/capomondo-v3/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - capomondo
+
+  gotenberg:
+    image: thecodingmachine/gotenberg:7
+    restart: always
+    networks:
+      - capomondo
+
+  redis:
+    image: redis:7.0.8-alpine
+    restart: always
+    container_name: redis
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+    networks:
+      - capomondo
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+
+networks:
+  - capomondo:
