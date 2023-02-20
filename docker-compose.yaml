@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   php:
-    image: ghcr.io/clacroix/capomondo-reports-fpm:latest
+    image: ghcr.io/clacroix/capomondo-reports-fpm-amd64:latest
     container_name: php-fpm
     restart: always
     volumes:
@@ -19,7 +19,7 @@ services:
       - capomondo
 
   caddy:
-    image: ghcr.io/clacroix/capomondo-caddy:latest
+    image: ghcr.io/clacroix/capomondo-caddy-amd64:latest
     depends_on:
       - php
     env_file:
