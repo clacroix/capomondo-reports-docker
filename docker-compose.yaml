@@ -7,6 +7,7 @@ services:
     restart: always
     volumes:
       - php_socket:/var/run/php
+      - php_cache:/srv/app/var
       - /home/clacroix/capomondo-v3/files:/srv/app/files
     healthcheck:
       interval: 10s
@@ -77,6 +78,7 @@ services:
 
 volumes:
   php_socket:
+  php_cache:
   caddy_data:
   caddy_config:
 
