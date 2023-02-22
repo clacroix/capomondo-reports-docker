@@ -20,7 +20,7 @@ services:
       - capomondo
 
   php-cli:
-    image: ghcr.io/clacroix/capomondo-reports-cli7:latest
+    image: ghcr.io/clacroix/capomondo-reports-cli:latest
     container_name: php-cli
     restart: always
     volumes:
