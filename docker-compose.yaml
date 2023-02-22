@@ -24,7 +24,7 @@ services:
     container_name: php-cli
     restart: always
     volumes:
-      - php_cache:/srv/app/var
+      - php_cli_cache:/srv/app/var
       - /home/clacroix/capomondo-v3/files:/srv/app/files
     env_file:
       - .env.php.local
@@ -91,6 +91,7 @@ services:
 volumes:
   php_socket:
   php_cache:
+  php_cli_cache:
   caddy_data:
   caddy_config:
 
