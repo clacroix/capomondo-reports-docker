@@ -19,6 +19,18 @@ services:
     networks:
       - capomondo
 
+  php-cli:
+    image: ghcr.io/clacroix/capomondo-reports-cli7:latest
+    container_name: php-cli
+    restart: always
+    volumes:
+      - php_cache:/srv/app/var
+      - /home/clacroix/capomondo-v3/files:/srv/app/files
+    env_file:
+      - .env.php.local
+    networks:
+      - capomondo
+
   caddy:
     image: ghcr.io/clacroix/capomondo-caddy:latest
     depends_on:
